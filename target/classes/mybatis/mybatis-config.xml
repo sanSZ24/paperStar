@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 给指定包取别名，默认为实体类名，在相应xml的映射器中resulName可直接使用实体类名    -->
+<!--    <typeAliases>-->
+<!--        <package name="com.paperStar.pojo"/>-->
+<!--    </typeAliases>-->
+
+    <!-- 连接多个数据库   -->
+    <!-- 设置默认环境   -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!--    mybatis 连接 mysql8 配置            -->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/paperstar?serverTimezone=UTC&amp;characterEncoding=utf8&amp;useUnicode=true&amp;useSSL=false"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- sql 映射文件位置 -->
+    <mappers>
+        <!-- 手动添加映射文件位置       -->
+<!--        <mapper resource="com/interview/mapper/UserMapper.xml"/>-->
+
+        <!-- 包扫描方式添加映射文件       -->
+        <package name="com.paperStar.mapper"/>
+    </mappers>
+
+</configuration>
