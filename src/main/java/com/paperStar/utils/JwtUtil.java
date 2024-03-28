@@ -19,10 +19,10 @@ import java.util.SimpleTimeZone;
 public class JwtUtil {
     //    @Value("{jwt.skin.key}")
     //key的大小必须大于或等于256bit,需要32位英文字符，一个英文字符为：8bit,一个中文字符为12bit
-    private static String key="ssssssssssdfdsafasfdssdfsfsfssfs";
+    private static String key="paperStarForLearningShiroAndJwtAndRedis";
     //设置加密算法
     private SignatureAlgorithm signatureAlgorithm=SignatureAlgorithm.HS256;
-    private int sessionTime = 30*60*1000;//token有效时间为30分钟
+    public static int sessionTime = 30*60*1000;//token有效时间为30分钟
 
     /**
      * 获取转换后的私钥对象
@@ -101,7 +101,9 @@ public class JwtUtil {
     }
 
     /**
-     * 获取除去exp和iat的数据，exp：过期时间，iat：JWT生成的时间
+     * 获取除去exp和iat的数据，
+     * exp：过期时间
+     * iat：签发时间
      * @param jwsString
      * @return
      */
@@ -112,7 +114,24 @@ public class JwtUtil {
         return map;
     }
 
+    /**
+     * 获取token的过期时间
+     * exp：过期时间
+     * @param jwsString
+     * @return
+     */
+    public String getExpTime(String jwsString){
+        return getPayLoad(jwsString).get("exp").toString();
+    }
 
+    /**
+     * 获取token的签发时间
+     * @param jwsString
+     * @return
+     */
+    public String getIatTime(String jwsString){
+        return getPayLoad(jwsString).get("iat").toString();
+    }
 }
 
 

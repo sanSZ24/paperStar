@@ -40,8 +40,14 @@ public class Result {
     public static Result success(){
         return new Result(1, "success", null);
     }
+    public static Result success(Integer code,Object data){
+        return new Result(code,"success",data);
+    }
     public static Result error(String msg){
         return new Result(0, msg, null);
+    }
+    public static Result error(Integer code,String msg){
+        return new Result(code,msg,null);
     }
 
     @Override

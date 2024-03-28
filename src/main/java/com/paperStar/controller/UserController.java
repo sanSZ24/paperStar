@@ -6,6 +6,7 @@ import com.paperStar.pojo.Result;
 import com.paperStar.pojo.User;
 import com.paperStar.service.UserService;
 import com.paperStar.utils.JwtUtil;
+import com.paperStar.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.security.SecurityUtil;
 import org.apache.shiro.SecurityUtils;
@@ -32,6 +33,8 @@ public class UserController {
     JwtUtil jwtUtil;
     @Autowired
     UserDao userDao;
+    @Autowired
+    RedisUtil redisUtil;
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Result Login(@RequestBody User user){
@@ -57,15 +60,19 @@ public class UserController {
     @RequiresRoles(logical = Logical.OR, value = {"user"})
     public Result Logout(@RequestBody User user,@RequestHeader("token") String token){
         log.info("用户{}发起登出请求", user.getUserName());
-        Map<String,Object> map = jwtUtil.getPayLoadALSOExcludeExpAndIat(token);
-        return userService.Logout((int) map.get("id"));
+        //从redis中获取真正的jwt
+        String jwt = redisUtil.get(token);
+
+        //将key从redis中删除
+        redisUtil.delete(jwt);
+
+        //获取jwt中的信息，这里拿了key为id的值
+        return userService.Logout((int) jwtUtil.getPayLoadALSOExcludeExpAndIat(jwt).get("id"));
     }
 
-    @RequestMapping(value = "/test",method = RequestMethod.POST)
-    @RequiresRoles(value = {"user"})
-    public Result testUser(@RequestBody User user){
-
-        return Result.success("测试用户权限是否需要多次验证");
+    @RequestMapping(path = "/test")
+    public Result test(){
+        return Result.success(0,"test");
     }
 
     @RequestMapping(path = "/unauthorized/{message}")

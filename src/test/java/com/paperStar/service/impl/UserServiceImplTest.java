@@ -23,7 +23,7 @@ public class UserServiceImplTest {
     @Test
     public void login() {
         User user = new User();
-        user.setUserName("sanSZ");
+        user.setUserName("test");
         user.setPassword("123456");
         System.out.println(user);
         System.out.println(userService.Login(user));

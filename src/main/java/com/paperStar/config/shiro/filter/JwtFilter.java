@@ -1,6 +1,7 @@
 package com.paperStar.config.shiro.filter;
 
 import com.paperStar.config.shiro.jwt.JwtToken;
+import com.paperStar.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 
@@ -19,7 +20,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         //判断请求的请求头是否带上 "Token"
         if (isLoginAttempt(request, response)) {
-            log.info("请求头中存在token");
+            log.info("请求头中存在token,将使用onAccessDenied进行认证");
             return false;
         }
         //如果请求头不存在 Token，则可能是执行登陆操作或者是游客状态访问，无需检查 token，直接返回 true
@@ -34,9 +35,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         log.info("----jwtFilter的onAccessDenied()方法----");
         log.info("请求的 Header 中含有 jwtToken {}", jwt);
         JwtToken jwtToken = new JwtToken(jwt);
-        /*
-         * 下面就是固定写法
-         * */
+
         try {
             // 委托 realm 进行登录认证
             //所以这个地方最终还是调用JwtRealm进行的认证
@@ -50,6 +49,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         return true;
 
     }
+
 
 
     @Override
@@ -93,7 +93,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     private void onLoginFail(ServletResponse response) throws IOException {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        httpResponse.getWriter().write("login error");
+        httpResponse.getWriter().write(Result.error("login error").toString());
     }
 
 }

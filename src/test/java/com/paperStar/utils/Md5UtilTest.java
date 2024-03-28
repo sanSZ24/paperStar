@@ -3,10 +3,19 @@ package com.paperStar.utils;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class Md5UtilTest {
+
+    @Autowired
+    Md5Util md5Util;
 
     @Test
     public void testMd5(){
@@ -15,7 +24,6 @@ public class Md5UtilTest {
         String salt = randomNumberGenerator.nextBytes().toBase64();
 //        System.out.println(salt);
 
-        Md5Util md5Util = new Md5Util();
         System.out.println(md5Util.encode(password,"EkeysNN1T/hbbtw0v0EWMg=="));
 
         System.out.println(md5Util.decode("123456","EkeysNN1T/hbbtw0v0EWMg==",
